@@ -1,0 +1,338 @@
+@import 'tailwindcss';
+
+@theme inline {
+  --font-display: var(--font-inter-tight), sans-serif;
+  --font-sans: var(--font-geist-sans), sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
+
+  /* ── Core palette (original): warm neutrals with the signature neon green ── */
+  --color-cream: #f5f5f7;
+  --color-ink: #050505;
+  --color-forest: #c8ff00;
+  --color-forest-light: #d7ff4f;
+  --color-neon: #c8ff00;
+  --color-warm: #86868b;
+  --color-muted: #a1a1a6;
+  --color-light: #f5f5f7;
+  --color-elevated: #1d1d1f;
+  --color-elevated-dark: #141416;
+  --color-surface: #080808;
+  --color-surface-mid: #111113;
+  --color-border: #d2d2d7;
+  --color-border-dark: #424245;
+  --color-border-subtle: #2c2c2e;
+  --color-border-subtler: #1f1f21;
+  --color-charcoal: #1d1d1f;
+  --color-gray-soft: #a1a1a6;
+  --color-gray-mid: #6e6e73;
+  --color-gray-btn: #3a3a3c;
+  --color-footer-bg: #f5f5f7;
+  --color-footer-border: #d2d2d7;
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .film-grain {
+    animation: none !important;
+  }
+
+  .marquee-content-left,
+  .marquee-content-right {
+    animation: none !important;
+  }
+
+  .arrow-pulse {
+    animation: none !important;
+  }
+
+  .preloader-active main {
+    visibility: visible !important;
+  }
+}
+
+body.menu-open {
+  overflow: hidden !important;
+  height: 100vh;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+/* One shared horizontal rhythm for every primary page surface. */
+.site-container {
+  width: 100%;
+  max-width: 92rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .site-container { padding-inline: 2rem; }
+}
+
+@media (min-width: 768px) {
+  .site-container { padding-inline: 3rem; }
+}
+
+@media (min-width: 1024px) {
+  .site-container { padding-inline: 4rem; }
+}
+
+.preloader-active {
+  overflow: hidden;
+}
+
+/* Compact-height hero: keep the complete first impression inside pinned mobile viewports. */
+@media (max-width: 767px) and (max-height: 680px) {
+  .hero-shell {
+    padding-top: 5.25rem;
+    padding-bottom: 0;
+  }
+
+  .hero-layout {
+    min-height: calc(100dvh - 5.25rem);
+  }
+
+  .hero-meta {
+    padding-bottom: 0.5rem;
+  }
+
+  .hero-launch {
+    padding-top: 0.75rem;
+  }
+
+  .hero-heading {
+    font-size: clamp(2.6rem, 20.5vw, 4.75rem);
+  }
+
+  .hero-statement {
+    font-size: 1rem;
+    line-height: 1.22;
+  }
+
+}
+
+.preloader-active main {
+  visibility: hidden;
+}
+
+.preloader-complete main {
+  visibility: visible;
+}
+
+::selection {
+  background: #c8ff00;
+  color: #050505;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preloader-active main {
+    visibility: visible !important;
+  }
+}
+
+.bg-primary {
+  background-color: #c8ff00;
+}
+.bg-foreground {
+  background-color: #24231f;
+}
+
+/* ── Hero name: wave lift on hover ──
+   Hovering the name sends a quick ripple through the letters — each one lifts
+   and settles in sequence, left to right. Single-copy letters: nothing is ever
+   hidden or swapped. The band lifts slightly and the ambient glow intensifies. */
+.name-letter {
+  display: inline-block;
+  will-change: transform;
+}
+
+@keyframes nameWave {
+  0%, 100% { transform: translateY(0); }
+  35% { transform: translateY(-0.075em); }
+}
+
+[data-name-hover]:hover .name-letter {
+  animation: nameWave 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--wave-delay, 0ms);
+}
+
+/* Band quietly lifts while the name is lit. */
+[data-hero-band] {
+  transition: background-color 0.5s ease;
+}
+
+[data-name-hover]:hover [data-hero-band] {
+  background-color: #131417;
+}
+
+/* Ambient spotlight follows the cursor; a second, stronger layer fades in
+   only while the pointer is over the name. */
+.hero-glow,
+.hero-glow-boost {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.hero-glow {
+  background: radial-gradient(
+    560px circle at var(--glow-x, 50%) var(--glow-y, 50%),
+    rgba(200, 255, 0, 0.07),
+    transparent 65%
+  );
+}
+
+.hero-glow-boost {
+  background: radial-gradient(
+    760px circle at var(--glow-x, 50%) var(--glow-y, 50%),
+    rgba(200, 255, 0, 0.16),
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+
+.hero-shell:has([data-name-hover]:hover) .hero-glow-boost {
+  opacity: 1;
+}
+
+.film-grain {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.014;
+  pointer-events: none;
+  z-index: 9990;
+}
+
+/* ── Marquee ── */
+.marquee-container {
+  overflow: hidden;
+  width: 100%;
+}
+
+.marquee-row {
+  display: flex;
+  overflow: hidden;
+  width: 100%;
+  white-space: nowrap;
+}
+
+.marquee-content-left {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: marquee-left 30s linear infinite;
+}
+
+.marquee-content-right {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: marquee-right 30s linear infinite;
+}
+
+.marquee-row:hover .marquee-content-left,
+.marquee-row:hover .marquee-content-right {
+  animation-play-state: paused;
+}
+
+@keyframes marquee-left {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+
+@keyframes marquee-right {
+  0% { transform: translate3d(-50%, 0, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+
+.scroll-progress-bar {
+  will-change: transform;
+}
+.film-grain {
+  will-change: transform;
+}
+
+@keyframes arrowPulse {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(6px); }
+}
+.arrow-pulse {
+  animation: arrowPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes arrowPulseDown {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
+}
+.arrow-pulse-down {
+  display: inline-block;
+  animation: arrowPulseDown 1.8s ease-in-out infinite;
+}
+
+.marquee-row {
+  position: relative;
+}
+.marquee-row::before,
+.marquee-row::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 8%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.marquee-row-light::before {
+  left: 0;
+  background: linear-gradient(to right, #e8e8e3, transparent);
+}
+.marquee-row-light::after {
+  right: 0;
+  background: linear-gradient(to left, #e8e8e3, transparent);
+}
+.marquee-row-dark::before {
+  left: 0;
+  background: linear-gradient(to right, #080807, transparent);
+}
+.marquee-row-dark::after {
+  right: 0;
+  background: linear-gradient(to left, #080807, transparent);
+}
+
+/* The native scrollbar is hidden: the green progress bar at the top of the
+   viewport serves as the scroll indicator, and hiding the gutter lets
+   full-width elements (like the hero name band) reach the true viewport edge. */
+html {
+  scrollbar-width: none;
+}
+html::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide the native desktop pointer only while the custom cursor is mounted.
+   Touch and coarse-pointer devices keep their native interaction behavior. */
+@media (hover: hover) and (pointer: fine) {
+  body.custom-cursor-active,
+  body.custom-cursor-active * {
+    cursor: none !important;
+  }
+}
